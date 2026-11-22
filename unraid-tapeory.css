@@ -233,8 +233,8 @@
 }
 
 :root:is(.Theme--black, .Theme--white) {
-    --tp-font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --tp-font-heading: "Space Grotesk", var(--tp-font-body);
+    --tp-font-body: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --tp-font-heading: "Plus Jakarta Sans", "Space Grotesk", var(--tp-font-body);
     --tp-gradient: linear-gradient(135deg, var(--tp-primary), var(--tp-primary-ii));
     --tp-r-sm: 8px;
     --tp-r-md: 12px;
@@ -2705,7 +2705,7 @@
         color: var(--tp-primary);
     }
 
-    /* "Aurora Theme by Tunefish" */
+    /* "Aurora Theme by Fiservedpi" */
     #footer a.tp-credit strong {
         font-family: var(--tp-font-heading);
         background: var(--tp-gradient);

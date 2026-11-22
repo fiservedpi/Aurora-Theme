@@ -3,7 +3,7 @@
 
 <PLUGIN name="Aurora-Theme"
         author="Tunefish"
-        version="2026.11.20.1503"
+        version="2026.11.22.0422"
         launch="Settings/AuroraThemeSettings"
         pluginURL="https://raw.githubusercontent.com/Tunefish92/Aurora-Theme/release/Aurora-Theme.plg"
         support="https://github.com/Tunefish92/Aurora-Theme/issues"
@@ -11,7 +11,7 @@
         min="7.2.0">
 
 <CHANGES>
-###2026.11.20.1503
+###2026.11.22.0422
 - New colours, fonts, tables, buttons, dialogs and notification panel for the Black and White themes.
 - Optional sidebar navigation layout.
 - Page enhancements: brand and server card in the sidebar, slim top bar, page headings, status pills, Docker summary and filters.
@@ -85,10 +85,10 @@ if [ -e /boot/config/plugins/$OLD.plg ] || [ -d /usr/local/emhttp/plugins/$OLD ]
   echo "Settings moved over from $OLD, which has been removed."
 fi
 old=$(sed -n 's/^[[:space:]]*version="\([^"]*\)".*/\1/p' /boot/config/plugins/Aurora-Theme.plg 2>/dev/null | head -n 1)
-if [[ "$old" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}[A-Za-z0-9._-]*$ && "$old" != "2026.11.20.1503" ]]; then
+if [[ "$old" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}[A-Za-z0-9._-]*$ && "$old" != "2026.11.22.0422" ]]; then
   from=$(sed -n 's/.*"from":"\([^"]*\)".*/\1/p' /boot/config/plugins/Aurora-Theme/updated.json 2>/dev/null)
   [[ "$from" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}[A-Za-z0-9._-]*$ ]] || from=$old
-  printf '{"from":"%s","to":"%s","time":%s}\n' "$from" "2026.11.20.1503" "$(date +%s)" > /boot/config/plugins/Aurora-Theme/updated.json
+  printf '{"from":"%s","to":"%s","time":%s}\n' "$from" "2026.11.22.0422" "$(date +%s)" > /boot/config/plugins/Aurora-Theme/updated.json
 fi
 cat > /usr/local/emhttp/plugins/Aurora-Theme/AuroraTheme.page <<'AURORA_THEME_EOF'
 Menu="Buttons"
@@ -125,6 +125,9 @@ if (isset($themeHelper) && method_exists($themeHelper, 'isTopNavTheme') && !$the
 <?php endif; ?>
 <?php if (!$auroraOff): ?>
 <?php if (($aurora['theme'] ?? 'yes') == 'yes'): ?>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..700,0..1,-50..200&display=swap">
 <link type="text/css" rel="stylesheet" href="<?php autov('/plugins/Aurora-Theme/styles/theme.css') ?>">
 <?php
 // Display Settings, header custom text, secondary text and background colours: the theme sets
@@ -360,7 +363,7 @@ if (in_array(rtrim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PAT
 <?php if ($auroraClasses): ?>
 <script>document.documentElement.classList.add(...<?= json_encode($auroraClasses) ?>);</script>
 <?php endif; ?>
-<?php if (substr('2026.11.20.1503', -4) === '-dev'): ?>
+<?php if (substr('2026.11.22.0422', -4) === '-dev'): ?>
 <?php // A dev build (version "...-dev", set by plugin/build.py) is installed: a "Dev" badge in the
       // top bar, linking to the settings, where the update channel goes back to stable. ?>
 <style id="aurora-dev-badge">
@@ -382,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var badge = document.createElement('a');
   badge.className = 'tp-dev-badge';
   badge.href = '/Settings/AuroraThemeSettings';
-  badge.title = 'Aurora Theme dev build 2026.11.20.1503: a test version, installed because the update channel is set to dev builds. Click to change it.';
+  badge.title = 'Aurora Theme dev build 2026.11.22.0422: a test version, installed because the update channel is set to dev builds. Click to change it.';
   badge.innerHTML = '<i aria-hidden="true"></i><span>Aurora</span><b>Dev</b>';
   // Where it goes: with the sidebar shown, on its own line under Unraid's version (the version
   // row has room for the version and its update notice only); otherwise in
@@ -6274,17 +6277,17 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/scripts/enhance.js <<'AURORA_THEME_
 
   // Eyebrow and subtitle for the stock tabs; other tabs get a heading without them.
   const TABS = {
-    Dashboard: ['Overview', 'Health, storage and services at a glance.'],
-    Main: ['Storage', 'Array devices, pools and boot media.'],
-    Shares: ['Storage', 'User shares and how they are exported and stored.'],
-    Users: ['Access', 'Accounts that can reach shares and the web interface.'],
-    Settings: ['Configuration', 'System, network service and preference settings.'],
-    Plugins: ['Extensions', 'Installed plugins and the updates available for them.'],
-    Docker: ['Applications', 'Manage containers, review resource use, and keep services healthy.'],
-    VMs: ['Virtualisation', 'Virtual machines and the resources assigned to them.'],
-    Apps: ['Community applications', 'Browse container templates and install them in one step.'],
-    Stats: ['Monitoring', 'Processor, memory, network and disk activity over time.'],
-    Tools: ['Maintenance', 'Diagnostics, system information and maintenance utilities.'],
+    Dashboard: ['Overview', 'Health, storage and services at a glance.', 'space_dashboard'],
+    Main: ['Storage', 'Array devices, pools and boot media.', 'dns'],
+    Shares: ['Storage', 'User shares and how they are exported and stored.', 'folder_shared'],
+    Users: ['Access', 'Accounts that can reach shares and the web interface.', 'group'],
+    Settings: ['Configuration', 'System, network service and preference settings.', 'tune'],
+    Plugins: ['Extensions', 'Installed plugins and the updates available for them.', 'extension'],
+    Docker: ['Applications', 'Manage containers, review resource use, and keep services healthy.', 'widgets'],
+    VMs: ['Virtualisation', 'Virtual machines and the resources assigned to them.', 'desktop_windows'],
+    Apps: ['Community applications', 'Browse container templates and install them in one step.', 'apps'],
+    Stats: ['Monitoring', 'Processor, memory, network and disk activity over time.', 'analytics'],
+    Tools: ['Maintenance', 'Diagnostics, system information and maintenance utilities.', 'build'],
   };
 
   /**
@@ -7545,7 +7548,14 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/scripts/enhance.js <<'AURORA_THEME_
     if (document.querySelector('.searchAreaHolder')) heading.classList.add('tp-heading-below-search');
     const text = element('div', 'tp-heading-text');
     const eyebrow = info.subPage ? info.tab : known && known[0];
-    if (eyebrow) text.append(element('p', 'tp-eyebrow', eyebrow));
+    if (eyebrow) {
+      const p = element('p', 'tp-eyebrow');
+      if (known && known[2] && !info.subPage) {
+        p.append(element('span', 'material-symbols-rounded', known[2]));
+      }
+      p.append(document.createTextNode(eyebrow));
+      text.append(p);
+    }
     text.append(element('h1', '', info.subPage || info.tab));
     if (known && !info.subPage) text.append(element('p', 'tp-subtitle', known[1]));
     heading.append(text);
@@ -11229,12 +11239,75 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/scripts/enhance.js <<'AURORA_THEME_
   }
 
   /**
+   * Applies Google Material Symbols Rounded to Unraid's page tabs and sub-tabs.
+   */
+  function materialTabs() {
+    const ICONS = {
+      'array devices': 'hard_drive',
+      'pool devices': 'dataset',
+      'zfs master': 'layers',
+      'boot device': 'memory',
+      'unassigned devices': 'link_off',
+      'array operation': 'tune',
+      'cache devices': 'speed',
+      'flash': 'usb',
+      'smb': 'share',
+      'nfs': 'folder_shared',
+      'iso': 'album',
+      'containers': 'widgets',
+      'container list': 'view_list',
+      'templates': 'format_shapes',
+      'user scripts': 'code',
+      'scheduled': 'schedule',
+      'cron': 'alarm',
+      'network': 'lan',
+      'identification': 'badge',
+      'date and time': 'calendar_today',
+      'display settings': 'palette',
+      'notifications': 'notifications',
+      'disk settings': 'storage',
+      'management access': 'admin_panel_settings',
+      'vm manager': 'desktop_windows',
+      'docker': 'widgets',
+      'apps': 'apps',
+      'tools': 'build',
+      'stats': 'analytics'
+    };
+
+    function updateTab(button) {
+      const span = button.querySelector('span');
+      const text = (span ? span.textContent : button.textContent || '').trim().toLowerCase();
+      const icon = ICONS[text];
+      if (!icon) return;
+
+      let symbol = button.querySelector('.tp-material-icon');
+      if (!symbol) {
+        symbol = element('span', 'material-symbols-rounded tp-material-icon', icon);
+        const old = button.querySelector('i, img.icon, svg');
+        if (old) old.replaceWith(symbol);
+        else if (span) button.insertBefore(symbol, span);
+        else button.prepend(symbol);
+      } else if (symbol.textContent !== icon) {
+        symbol.textContent = icon;
+      }
+    }
+
+    function scan() {
+      document.querySelectorAll('nav.tabs button[role="tab"], .tabs button[role="tab"]').forEach(updateTab);
+    }
+
+    scan();
+    const nav = document.querySelector('nav.tabs, .tabs');
+    if (nav) new MutationObserver(scan).observe(nav, { childList: true, subtree: true });
+  }
+
+  /**
    * Runs every enhancer for the current page, each on its own, so one that fails does not stop the
    * others or Unraid's scripts.
    */
   function start() {
     const info = pageInfo();
-    [function () { topBar(info); }, themeSwitch, function () { serverCard(info); }, function () { pageHeading(info); }, function () { folderViewBeta(info); }, function () { panelFavourites(info); }, function () { panelSearch(info); }, function () { usersPage(info); }, selectLists, lockState, docker, dockerPorts, vmViewSwitch, vmGroups, vmDetails, mainTables, arrayOperations, dashboardSummary, dashboardCharts, dashboardCpu, dashboardCores, dashboardContainers, dashboardUpdates, dockerUpdateWatch, dashboardDockerOrder, dashboardVmGroups, dashboardMemory, dashboardGpu, dashboardVmUsage, dashboardFans, diskLocationBays, sectionRows, externalLinkDialog, caOverlay, helpButton, navTitles, usageBar, navProgress, pluginRecheck, function () { toolText(info); }].forEach(function (enhancer) {
+    [function () { topBar(info); }, themeSwitch, function () { serverCard(info); }, function () { pageHeading(info); }, materialTabs, function () { folderViewBeta(info); }, function () { panelFavourites(info); }, function () { panelSearch(info); }, function () { usersPage(info); }, selectLists, lockState, docker, dockerPorts, vmViewSwitch, vmGroups, vmDetails, mainTables, arrayOperations, dashboardSummary, dashboardCharts, dashboardCpu, dashboardCores, dashboardContainers, dashboardUpdates, dockerUpdateWatch, dashboardDockerOrder, dashboardVmGroups, dashboardMemory, dashboardGpu, dashboardVmUsage, dashboardFans, diskLocationBays, sectionRows, externalLinkDialog, caOverlay, helpButton, navTitles, usageBar, navProgress, pluginRecheck, function () { toolText(info); }].forEach(function (enhancer) {
       // One failing enhancer must not stop the others or the page's own scripts.
       try { enhancer(); } catch (error) { console.error('Aurora Theme:', error); }
     });
@@ -12074,31 +12147,81 @@ button.tp-fv-beta.tp-fv-conflict > .fa,
     animation: fa-spin 1s linear infinite;
 }
 
-/* ---- Page heading */
+/* ---- Material Symbols & Page heading */
+.material-symbols-rounded {
+    font-family: 'Material Symbols Rounded', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.8rem;
+    line-height: 1;
+    display: inline-block;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    vertical-align: middle;
+    font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
+
 .tp-heading {
     margin: 1.4rem 0 2.4rem;
 }
 
 .tp-eyebrow {
-    margin: 0 0 0.5rem;
-    color: var(--tp-primary, var(--link-text-color));
-    font: 600 1rem var(--tp-font-heading, inherit);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 0.8rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.28);
+    color: #fda4af;
+    font: 700 0.95rem var(--tp-font-heading, inherit);
     letter-spacing: 0.115em;
     text-align: left;
     text-transform: uppercase;
 }
 
+.tp-eyebrow .material-symbols-rounded {
+    font-size: 1.4rem;
+    color: #fb7185;
+}
+
 .tp-heading h1 {
     margin: 0;
-    font: 600 2.7rem/1.2 var(--tp-font-heading, inherit);
-    letter-spacing: -0.01em;
+    font: 700 2.8rem/1.2 var(--tp-font-heading, inherit);
+    letter-spacing: -0.02em;
 }
 
 .tp-subtitle {
     margin: 0.6rem 0 0;
     color: var(--tp-muted, var(--alt-text-color));
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     text-align: left;
+}
+
+/* Material Symbols on tabs */
+.tabs button[role="tab"] .tp-material-icon {
+    font-size: 1.7rem;
+    color: inherit;
+    transition: color 0.3s var(--tp-ease), transform 0.25s var(--tp-ease);
+}
+
+.tabs button[role="tab"]:hover .tp-material-icon {
+    color: #fb7185;
+    transform: translateY(-1px);
+}
+
+.tabs button[role="tab"][aria-selected="true"] .tp-material-icon {
+    color: #38bdf8;
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.55));
+}
+
+.tabs button[role="tab"][aria-selected="true"]:after {
+    background: linear-gradient(90deg, #38bdf8 0%, #818cf8 50%, #f43f5e 100%) !important;
 }
 
 /* ---- Container and VM state as a pill. Not with FolderView Plus (tp-fvplus): its lists keep
@@ -16356,6 +16479,10 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/layout-sidebar.css <<'AURORA
     :root.tp-sidebar.Theme--nav-top {
         --tp-sidebar-width: 22rem;
         --tp-sidebar-line: rgba(255, 255, 255, 0.08);
+        --tp-primary: #38bdf8;
+        --tp-primary-ii: #f43f5e;
+        --tp-primary-iii: #818cf8;
+        --tp-primary-soft: rgba(56, 189, 248, 0.20);
 
         /* The Apps tab keeps its search bar below a top menu; with the menu in the sidebar it
            belongs at the very top. */
@@ -16462,9 +16589,14 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/layout-sidebar.css <<'AURORA
             padding: 12rem 1.2rem 4rem;
             box-sizing: border-box;
             overflow-y: auto;
-            border-right: 1px solid var(--tp-sidebar-line);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
             border-bottom: 0;
-            background-color: var(--header-background-color);
+            background:
+                radial-gradient(35vmax 28vmax at 0% 0%, rgba(56, 189, 248, 0.18), transparent 70%),
+                radial-gradient(35vmax 28vmax at 100% 85%, rgba(244, 63, 94, 0.14), transparent 70%),
+                var(--tp-bg, #07090e);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             scrollbar-width: thin;
         }
 
@@ -16664,12 +16796,48 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/layout-sidebar.css <<'AURORA
             display: block;
         }
 
+        .tp-server-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.4rem;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 14px;
+            background: rgba(18, 21, 29, 0.75);
+            box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        .tp-server-card:hover {
+            border-color: rgba(56, 189, 248, 0.35);
+            box-shadow: 0 8px 24px -8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .tp-server-card b {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #ffffff;
+            font: 600 1.35rem var(--tp-font-heading, inherit);
+        }
+
+        .tp-server-card b:before {
+            flex: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #38bdf8;
+            box-shadow: 0 0 10px #38bdf8;
+            content: "";
+        }
+
         .nav-tile {
             /* Keep full height on short screens; the sidebar scrolls instead of squeezing. */
             flex: none;
             flex-direction: column;
             flex-wrap: nowrap;
-            gap: 2px;
+            gap: 4px;
             height: auto;
             min-height: 0;
             overflow: visible;
@@ -16688,28 +16856,38 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/layout-sidebar.css <<'AURORA
             display: flex;
             align-items: center;
             gap: 1.1rem;
-            min-height: 3.6rem;
-            padding: 0 1.1rem;
-            border-radius: 8px;
+            min-height: 3.8rem;
+            padding: 0 1.2rem;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            color: var(--tp-muted, #94a3b8);
+            transition: all 0.25s ease;
         }
 
         .nav-tile:not(.right) .nav-item:hover a {
-            background-color: rgba(255, 255, 255, 0.06);
+            color: var(--tp-text, #f1f5f9);
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.08);
         }
 
         .nav-tile:not(.right) .nav-item.active a {
-            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.18) 0%, rgba(129, 140, 248, 0.10) 50%, rgba(244, 63, 94, 0.06) 100%);
+            border-color: rgba(56, 189, 248, 0.35);
+            box-shadow: 0 8px 24px -8px rgba(56, 189, 248, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
         }
 
-        /* The active marker becomes a bar on the left edge instead of an underline. */
+        /* The active marker becomes a glowing gradient bar on the left edge. */
         .nav-tile:not(.right) .nav-item:after {
-            top: 0.8rem;
-            bottom: 0.8rem;
+            top: 0.6rem;
+            bottom: 0.6rem;
             left: 0;
-            width: 3px;
+            width: 3.5px;
             height: auto;
-            border-radius: 2px;
-            background: linear-gradient(180deg, var(--tp-primary, var(--brand-orange)), var(--tp-primary-ii, var(--brand-red)));
+            border-radius: 4px;
+            background: linear-gradient(180deg, #38bdf8 0%, #818cf8 50%, #f43f5e 100%);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.8), 0 0 6px rgba(244, 63, 94, 0.6);
             transform: scaleY(0);
             transform-origin: center;
         }
@@ -16729,13 +16907,20 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/layout-sidebar.css <<'AURORA
             width: 1.8rem;
             font: normal 1.5rem/1 FontAwesome;
             text-align: center;
-            opacity: 0.7;
+            opacity: 0.75;
             content: "\f111";
+            transition: color 0.25s, filter 0.25s, opacity 0.25s;
+        }
+
+        .nav-tile:not(.right) .nav-item:hover a:before {
+            color: #fb7185;
+            opacity: 1;
         }
 
         .nav-tile:not(.right) .nav-item.active a:before {
-            color: var(--tp-primary-ii, var(--brand-orange));
+            color: #38bdf8;
             opacity: 1;
+            filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.55));
         }
 
         .nav-tile:not(.right) .nav-item a[href$="/Dashboard"]:before { content: "\f0e4"; }
@@ -16758,9 +16943,12 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/layout-sidebar.css <<'AURORA
             gap: 0.6rem;
             margin-top: auto;
             padding: 1.2rem;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 16px;
+            background-color: rgba(18, 21, 29, 0.7);
+            box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .nav-tile.right:before {
@@ -16892,23 +17080,24 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/login.css <<'AURORA_THEME_EO
 
 :root {
     --tp-bg: #07090e;
-    --tp-card: rgba(18, 21, 29, 0.78);
+    --tp-card: rgba(14, 18, 28, 0.78);
     --tp-field: rgba(255, 255, 255, 0.04);
     --tp-text: #e7eaf0;
     --tp-muted: #8b93a5;
     --tp-border: rgba(255, 255, 255, 0.09);
     --tp-input-border: rgba(255, 255, 255, 0.14);
-    --tp-primary: #4f8bff;
-    --tp-primary-ii: #22d3ee;
-    --tp-primary-soft: rgba(79, 139, 255, 0.18);
-    --tp-gradient: linear-gradient(135deg, var(--tp-primary), var(--tp-primary-ii));
+    --tp-primary: #38bdf8;
+    --tp-primary-ii: #f43f5e;
+    --tp-primary-iii: #818cf8;
+    --tp-primary-soft: rgba(56, 189, 248, 0.20);
+    --tp-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #f43f5e 100%);
     --tp-danger: #f87171;
     --tp-danger-soft: rgba(248, 113, 113, 0.12);
-    --tp-success: #86efac;
-    --tp-success-soft: rgba(34, 197, 94, 0.13);
-    --tp-aurora-a: rgba(79, 139, 255, 0.35);
-    --tp-aurora-b: rgba(34, 211, 238, 0.22);
-    --tp-aurora-c: rgba(167, 139, 250, 0.22);
+    --tp-success: #34d399;
+    --tp-success-soft: rgba(52, 211, 153, 0.13);
+    --tp-aurora-a: rgba(56, 189, 248, 0.28);
+    --tp-aurora-b: rgba(244, 63, 94, 0.20);
+    --tp-aurora-c: rgba(129, 140, 248, 0.22);
     --tp-user-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b93a5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4 3.6-7 8-7s8 3 8 7'/%3E%3C/svg%3E");
     --tp-lock-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238b93a5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2.5'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E");
     color-scheme: dark;
@@ -16917,23 +17106,25 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/login.css <<'AURORA_THEME_EO
 /* :where() keeps this as weak as the dark palette above, so the accent setting and the user's
    custom-login.css (both written after this, as plain :root rules) win in either palette. */
 :root:where(.Theme--white, .Theme--azure) {
-    --tp-bg: #eef2f8;
-    --tp-card: rgba(255, 255, 255, 0.82);
+    --tp-bg: #eef4fb;
+    --tp-card: rgba(255, 255, 255, 0.85);
     --tp-field: #ffffff;
     --tp-text: #0f172a;
     --tp-muted: #64748b;
     --tp-border: rgba(15, 23, 42, 0.08);
     --tp-input-border: rgba(15, 23, 42, 0.14);
-    --tp-primary: #2563eb;
-    --tp-primary-ii: #06b6d4;
-    --tp-primary-soft: rgba(37, 99, 235, 0.12);
+    --tp-primary: #0284c7;
+    --tp-primary-ii: #e11d48;
+    --tp-primary-iii: #6366f1;
+    --tp-primary-soft: rgba(2, 132, 199, 0.14);
+    --tp-gradient: linear-gradient(135deg, #0284c7 0%, #6366f1 50%, #e11d48 100%);
     --tp-danger: #dc2626;
     --tp-danger-soft: rgba(220, 38, 38, 0.08);
     --tp-success: #15803d;
     --tp-success-soft: rgba(34, 197, 94, 0.12);
-    --tp-aurora-a: rgba(37, 99, 235, 0.22);
-    --tp-aurora-b: rgba(6, 182, 212, 0.18);
-    --tp-aurora-c: rgba(139, 92, 246, 0.14);
+    --tp-aurora-a: rgba(2, 132, 199, 0.18);
+    --tp-aurora-b: rgba(225, 29, 72, 0.14);
+    --tp-aurora-c: rgba(99, 102, 241, 0.14);
     --tp-user-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c0-4 3.6-7 8-7s8 3 8 7'/%3E%3C/svg%3E");
     --tp-lock-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='11' width='16' height='10' rx='2.5'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E");
     color-scheme: light;
@@ -18093,8 +18284,8 @@ cat > /usr/local/emhttp/plugins/Aurora-Theme/styles/theme.css <<'AURORA_THEME_EO
 }
 
 :root:is(.Theme--black, .Theme--white) {
-    --tp-font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --tp-font-heading: "Space Grotesk", var(--tp-font-body);
+    --tp-font-body: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --tp-font-heading: "Plus Jakarta Sans", "Space Grotesk", var(--tp-font-body);
     --tp-gradient: linear-gradient(135deg, var(--tp-primary), var(--tp-primary-ii));
     --tp-r-sm: 8px;
     --tp-r-md: 12px;
@@ -24561,7 +24752,7 @@ cat > /boot/config/plugins/Aurora-Theme/stats.cron <<'AURORA_THEME_EOF'
 AURORA_THEME_EOF
 /usr/bin/php /usr/local/emhttp/plugins/Aurora-Theme/scripts/schedule.php
 echo ""
-echo "Aurora-Theme 2026.11.20.1503 is installed."
+echo "Aurora-Theme 2026.11.22.0422 is installed."
 echo "Settings: Settings > User Utilities > Aurora Theme"
 echo ""
 ]]>

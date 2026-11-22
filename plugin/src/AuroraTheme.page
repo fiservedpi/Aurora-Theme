@@ -32,6 +32,9 @@ if (isset($themeHelper) && method_exists($themeHelper, 'isTopNavTheme') && !$the
 <?php endif; ?>
 <?php if (!$auroraOff): ?>
 <?php if (($aurora['theme'] ?? 'yes') == 'yes'): ?>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400..700,0..1,-50..200&display=swap">
 <link type="text/css" rel="stylesheet" href="<?php autov('/plugins/Aurora-Theme/styles/theme.css') ?>">
 <?php
 // Display Settings, header custom text, secondary text and background colours: the theme sets
@@ -90,11 +93,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!footer || footer.querySelector('.tp-credit')) return;
   var link = document.createElement('a');
   link.className = 'tp-credit';
-  link.href = 'https://github.com/Tunefish92';
+  link.href = 'https://github.com/Fiservedpi';
   link.target = '_blank';
   link.rel = 'noopener noreferrer';
   link.title = 'Aurora Theme on GitHub';
-  link.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>Aurora Theme by <strong>Tunefish</strong>';
+  link.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>Aurora Theme by <strong>Fiservedpi</strong>';
   footer.append(link);
 });
 </script>

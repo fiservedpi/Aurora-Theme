@@ -8,17 +8,17 @@
 
   // Eyebrow and subtitle for the stock tabs; other tabs get a heading without them.
   const TABS = {
-    Dashboard: ['Overview', 'Health, storage and services at a glance.'],
-    Main: ['Storage', 'Array devices, pools and boot media.'],
-    Shares: ['Storage', 'User shares and how they are exported and stored.'],
-    Users: ['Access', 'Accounts that can reach shares and the web interface.'],
-    Settings: ['Configuration', 'System, network service and preference settings.'],
-    Plugins: ['Extensions', 'Installed plugins and the updates available for them.'],
-    Docker: ['Applications', 'Manage containers, review resource use, and keep services healthy.'],
-    VMs: ['Virtualisation', 'Virtual machines and the resources assigned to them.'],
-    Apps: ['Community applications', 'Browse container templates and install them in one step.'],
-    Stats: ['Monitoring', 'Processor, memory, network and disk activity over time.'],
-    Tools: ['Maintenance', 'Diagnostics, system information and maintenance utilities.'],
+    Dashboard: ['Overview', 'Health, storage and services at a glance.', 'space_dashboard'],
+    Main: ['Storage', 'Array devices, pools and boot media.', 'dns'],
+    Shares: ['Storage', 'User shares and how they are exported and stored.', 'folder_shared'],
+    Users: ['Access', 'Accounts that can reach shares and the web interface.', 'group'],
+    Settings: ['Configuration', 'System, network service and preference settings.', 'tune'],
+    Plugins: ['Extensions', 'Installed plugins and the updates available for them.', 'extension'],
+    Docker: ['Applications', 'Manage containers, review resource use, and keep services healthy.', 'widgets'],
+    VMs: ['Virtualisation', 'Virtual machines and the resources assigned to them.', 'desktop_windows'],
+    Apps: ['Community applications', 'Browse container templates and install them in one step.', 'apps'],
+    Stats: ['Monitoring', 'Processor, memory, network and disk activity over time.', 'analytics'],
+    Tools: ['Maintenance', 'Diagnostics, system information and maintenance utilities.', 'build'],
   };
 
   /**
@@ -1279,7 +1279,14 @@
     if (document.querySelector('.searchAreaHolder')) heading.classList.add('tp-heading-below-search');
     const text = element('div', 'tp-heading-text');
     const eyebrow = info.subPage ? info.tab : known && known[0];
-    if (eyebrow) text.append(element('p', 'tp-eyebrow', eyebrow));
+    if (eyebrow) {
+      const p = element('p', 'tp-eyebrow');
+      if (known && known[2] && !info.subPage) {
+        p.append(element('span', 'material-symbols-rounded', known[2]));
+      }
+      p.append(document.createTextNode(eyebrow));
+      text.append(p);
+    }
     text.append(element('h1', '', info.subPage || info.tab));
     if (known && !info.subPage) text.append(element('p', 'tp-subtitle', known[1]));
     heading.append(text);
@@ -4963,12 +4970,75 @@
   }
 
   /**
+   * Applies Google Material Symbols Rounded to Unraid's page tabs and sub-tabs.
+   */
+  function materialTabs() {
+    const ICONS = {
+      'array devices': 'hard_drive',
+      'pool devices': 'dataset',
+      'zfs master': 'layers',
+      'boot device': 'memory',
+      'unassigned devices': 'link_off',
+      'array operation': 'tune',
+      'cache devices': 'speed',
+      'flash': 'usb',
+      'smb': 'share',
+      'nfs': 'folder_shared',
+      'iso': 'album',
+      'containers': 'widgets',
+      'container list': 'view_list',
+      'templates': 'format_shapes',
+      'user scripts': 'code',
+      'scheduled': 'schedule',
+      'cron': 'alarm',
+      'network': 'lan',
+      'identification': 'badge',
+      'date and time': 'calendar_today',
+      'display settings': 'palette',
+      'notifications': 'notifications',
+      'disk settings': 'storage',
+      'management access': 'admin_panel_settings',
+      'vm manager': 'desktop_windows',
+      'docker': 'widgets',
+      'apps': 'apps',
+      'tools': 'build',
+      'stats': 'analytics'
+    };
+
+    function updateTab(button) {
+      const span = button.querySelector('span');
+      const text = (span ? span.textContent : button.textContent || '').trim().toLowerCase();
+      const icon = ICONS[text];
+      if (!icon) return;
+
+      let symbol = button.querySelector('.tp-material-icon');
+      if (!symbol) {
+        symbol = element('span', 'material-symbols-rounded tp-material-icon', icon);
+        const old = button.querySelector('i, img.icon, svg');
+        if (old) old.replaceWith(symbol);
+        else if (span) button.insertBefore(symbol, span);
+        else button.prepend(symbol);
+      } else if (symbol.textContent !== icon) {
+        symbol.textContent = icon;
+      }
+    }
+
+    function scan() {
+      document.querySelectorAll('nav.tabs button[role="tab"], .tabs button[role="tab"]').forEach(updateTab);
+    }
+
+    scan();
+    const nav = document.querySelector('nav.tabs, .tabs');
+    if (nav) new MutationObserver(scan).observe(nav, { childList: true, subtree: true });
+  }
+
+  /**
    * Runs every enhancer for the current page, each on its own, so one that fails does not stop the
    * others or Unraid's scripts.
    */
   function start() {
     const info = pageInfo();
-    [function () { topBar(info); }, themeSwitch, function () { serverCard(info); }, function () { pageHeading(info); }, function () { folderViewBeta(info); }, function () { panelFavourites(info); }, function () { panelSearch(info); }, function () { usersPage(info); }, selectLists, lockState, docker, dockerPorts, vmViewSwitch, vmGroups, vmDetails, mainTables, arrayOperations, dashboardSummary, dashboardCharts, dashboardCpu, dashboardCores, dashboardContainers, dashboardUpdates, dockerUpdateWatch, dashboardDockerOrder, dashboardVmGroups, dashboardMemory, dashboardGpu, dashboardVmUsage, dashboardFans, diskLocationBays, sectionRows, externalLinkDialog, caOverlay, helpButton, navTitles, usageBar, navProgress, pluginRecheck, function () { toolText(info); }].forEach(function (enhancer) {
+    [function () { topBar(info); }, themeSwitch, function () { serverCard(info); }, function () { pageHeading(info); }, materialTabs, function () { folderViewBeta(info); }, function () { panelFavourites(info); }, function () { panelSearch(info); }, function () { usersPage(info); }, selectLists, lockState, docker, dockerPorts, vmViewSwitch, vmGroups, vmDetails, mainTables, arrayOperations, dashboardSummary, dashboardCharts, dashboardCpu, dashboardCores, dashboardContainers, dashboardUpdates, dockerUpdateWatch, dashboardDockerOrder, dashboardVmGroups, dashboardMemory, dashboardGpu, dashboardVmUsage, dashboardFans, diskLocationBays, sectionRows, externalLinkDialog, caOverlay, helpButton, navTitles, usageBar, navProgress, pluginRecheck, function () { toolText(info); }].forEach(function (enhancer) {
       // One failing enhancer must not stop the others or the page's own scripts.
       try { enhancer(); } catch (error) { console.error('Aurora Theme:', error); }
     });

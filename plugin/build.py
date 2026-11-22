@@ -13,9 +13,9 @@ import sys
 from xml.sax.saxutils import escape
 
 NAME = "Aurora-Theme"
-AUTHOR = "Tunefish"
+AUTHOR = "Fiservedpi"
 # GitHub repository: updates are checked there and the settings page opens issues there.
-GITHUB_REPO = "Tunefish92/Aurora-Theme"
+GITHUB_REPO = "Fiservedpi/Aurora-Theme"
 # Unraid's Plugins page downloads this file on every visit to see whether an update is out. It is
 # the newest release's .plg on the "release" branch, which plugin/release.py updates with each
 # GitHub release and nothing else touches. raw.githubusercontent.com answers in one request
@@ -37,7 +37,7 @@ version = sys.argv[1] if len(sys.argv) > 1 else datetime.datetime.now().strftime
 
 # Installed path -> source file. The theme stylesheet lives at the repo root so it can also be
 # pasted into a browser extension for quick experiments.
-files = {str(path.relative_to(src)): path for path in sorted(src.rglob("*")) if path.is_file()}
+files = {path.relative_to(src).as_posix(): path for path in sorted(src.rglob("*")) if path.is_file()}
 files["styles/theme.css"] = root.parent / "unraid-tapeory.css"
 
 # The plugin was called Tunefish-Future-Theme before. If that one is installed, its settings,
@@ -229,10 +229,11 @@ print(f"wrote {out} ({len(plg)} bytes, {len(files)} files, version {version})")
 
 # Also drop the build on the server's share (mounted here), from where it is installed.
 # AURORA_DEPLOY overrides the folder; set it to an empty value to skip the copy.
-deploy = os.environ.get("AURORA_DEPLOY", "/mnt/filesharing/unraid")
+deploy = os.environ.get("AURORA_DEPLOY", "")
 if deploy and pathlib.Path(deploy).is_dir():
     target = pathlib.Path(deploy) / out.name
-    shutil.copyfile(out, target)
-    print(f"copied to {target}")
+    if target.resolve() != out.resolve():
+        shutil.copyfile(out, target)
+        print(f"copied to {target}")
 elif deploy:
     print(f"not copied: {deploy} is not available")
