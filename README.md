@@ -1,4 +1,6 @@
 # Aurora Theme for Unraid
+All credit to @Tunefish92 for this amazing project, I'm just tweaking it to my preferences 
+
 
 > [!WARNING]
 > **Aurora Theme is still at an early stage.** It is used on real servers, but it touches almost every page of the webGUI, and not every setup, plugin or screen size has been tried yet. Expect rough edges. If something looks wrong or you have an idea, please [open an issue](https://github.com/Fiservedpi/Aurora-Theme/issues). The settings page can fill one in for you, including the system details. If a page ever becomes unusable, add `?aurora=off` to its address to switch the theme off in that browser (see [If something looks wrong](#if-something-looks-wrong)).
