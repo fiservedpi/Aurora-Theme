@@ -1,4 +1,6 @@
 # Aurora Theme for Unraid
+All credit goes to the amazing @Tunefish92 for this project; just forking so I can tweak to my preferences. 
+
 
 [![Buy me a coffee](https://img.shields.io/badge/Buy_me_a_coffee-PayPal-0070ba?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/tunefish92)
 
